@@ -1,0 +1,34 @@
+---
+
+jobs:
+- name: build-and-deployment
+  plan:
+  # Get Git Repo
+  - get: resource-git
+    trigger: true
+  # Build Artifacts
+  - task: build-artifacts
+    file: resource-git/articulate/ci/tasks/build.yml
+  # Deploy It To PCF
+  - task: deploy-to-pcf
+    file: resource-git/ci/tasks/deploy.yml
+    params:
+      app_name: ((app-name))
+      app_host: ((app-host))
+      domain: ((pcf-domain))
+      manifest: manifest-with-service.yml
+      api: ((pcf-api))
+      username: ((pcf-username))
+      password: ((pcf-password))
+      organization: ((pcf-organization))
+      space: ((pcf-space))
+      skip_cert_check: true
+
+##############################
+resources:
+# GIT
+- name: resource-git
+  type: git
+  source:
+    uri: https://github.com/brightzheng100/pcf101-articulate-attendee
+    branch: master

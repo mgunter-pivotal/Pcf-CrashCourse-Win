@@ -1,0 +1,7 @@
+applications:
+- name: ((articulate_app_name))
+  path: target/articulate-1.0.0.jar
+  instances: ((articulate_app_instances))
+  memory: 800M
+  routes:
+  - route: ((articulate_app_route))

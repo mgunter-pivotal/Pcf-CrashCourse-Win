@@ -1,0 +1,62 @@
+---
+# == Description
+# This is a sample apps' CI/CD pipeline which includes some typical steps:
+# 1. Get source code from repo like Git
+# 2. Build it with unit tests embedded
+# 3. Deploy it to PCF
+# 4. Perform some smoke tests
+
+jobs:
+- name: build-and-deployment
+  plan:
+
+  #1. Get source code from repo like Git
+  - get: resource-git
+    trigger: true
+  
+  #2. Build it with unit tests embedded
+  - task: build-artifacts
+    file: resource-git/articulate/ci/tasks/build.yml
+  
+  #3. Deploy it to PCF
+  - put: resource-pcf
+    params:
+      manifest: resource-git/articulate/manifest-demo.yml
+      path: artifacts/articulate-*.jar
+      current_app_name: ((app-name))
+  
+  # Verify the app whether it's been successfully deployed
+  - get: image-javagradlegitpack
+  - task: smoke-tests
+    image: image-javagradlegitpack
+    file: resource-git/articulate/ci/tasks/smoke-tests.yml
+    params:
+      app_url: ((app_url))
+
+##############################
+resources:
+# GIT
+- name: resource-git
+  type: git
+  source:
+    uri: https://github.com/brightzheng100/pcf101-articulate-attendee
+    branch: master
+
+# CF
+- name: resource-pcf
+  type: cf
+  source:
+    api: ((pcf-api))
+    username: ((pcf-username))
+    password: ((pcf-password))
+    organization: ((pcf-organization))
+    space: ((pcf-space))
+    skip_cert_check: true
+
+# Custom Image
+- name: image-javagradlegitpack
+  type: docker-image
+  source:
+    repository: ((docker_image))
+    insecure_registries: ((docker_insecure_registries))
+    tag: latest
