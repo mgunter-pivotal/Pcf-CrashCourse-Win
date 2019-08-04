@@ -1,0 +1,9 @@
+---
+applications:
+ - name: staticfile-app
+   buildpack: staticfile_buildpack 
+   random-route: true  
+   instances: 1
+   memory: 64M
+   disk_quota: 32M
+

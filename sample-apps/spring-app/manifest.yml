@@ -1,0 +1,10 @@
+---
+applications:
+- name: spring-app
+  memory: 1G
+  disk_quota: 256MB
+  path: build/libs/spring-music.jar
+  random-route: true
+  env:
+    JAVA_OPTS: -Djava.security.egd=file:/dev/./urandom
+
