@@ -1,7 +1,7 @@
 applications:
-- name: articulate-bright
+- name: articulate
   path: target/articulate-1.0.0.jar
   instances: 2
-  memory: 800M
+  memory: 1G
   routes:
-  - route: articulate-bright.cfapps.io
+  - route: articulate-change-me.cfapps.io
